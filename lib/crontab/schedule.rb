@@ -35,6 +35,10 @@ module Crontab
 
     attr_reader :minutes, :hours, :day_of_months, :months, :day_of_weeks, :start
 
+    def start=(time_or_date)
+      @start = ensure_time(time_or_date)
+    end
+
     def day_of_months_given?
       !!@day_of_months_given # ensures boolean
     end

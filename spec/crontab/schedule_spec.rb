@@ -128,6 +128,46 @@ describe Crontab::Schedule do
 
   end
 
+  describe 'when accessing' do
+    it 'should accept time as start parameter' do
+      start = Time.local(2009, 3, 25, 10, 20, 30)
+      lambda {
+        schedule = Crontab::Schedule.new('* * * * *', start)
+        schedule.start.should == start
+      }.should_not raise_error
+    end
+
+    it 'should accept Date as start parameter' do
+      start = Date.new(2009, 3, 25)
+      lambda {
+        schedule = Crontab::Schedule.new('* * * * *', start)
+        schedule.start.should == Time.local(start.year, start.month, start.day)
+      }.should_not raise_error
+    end
+
+    it 'should set start to given Time' do
+      initial_start = Time.local(2009, 3, 25, 10, 20, 30)
+      schedule = Crontab::Schedule.new('* * * * *', initial_start)
+      schedule.start.should == initial_start
+
+      new_start = Time.local(2009, 4, 25, 11, 21, 31)
+      schedule.start = new_start
+      schedule.start.should == new_start
+    end
+
+    it 'should set start to given Date' do
+      initial_start = Time.local(2009, 3, 25, 10, 20, 30)
+      schedule = Crontab::Schedule.new('* * * * *', initial_start)
+      schedule.start.should == initial_start
+
+      new_start = Date.new(2009, 4, 25)
+      new_start_as_time = Time.local(new_start.year, new_start.month, new_start.day)
+      schedule.start = new_start
+      schedule.start.should == new_start_as_time
+    end
+  end
+
+
   describe 'when comparing' do
     it 'should equal to other if and only if both are created from equivalent spec and start time' do
       start = Time.now
