@@ -1,0 +1,14 @@
+SHELL="/bin/zsh"
+MAIL_TO= nobody@example.com
+FOO = foo
+"BAR"=bar
+'BAZ'=baz
+
+#15 3 1 * * run-parts $HOME/.cron.d/monthly
+8 3 * * 6 run-parts $HOME/.cron.d/weekly
+50 2 * * * run-parts $HOME/.cron.d/daily
+3 * * * * run-parts $HOME/.cron.d/hourly
+
+*/5 * * * * curl -sI http://example.com >/dev/null
+
+* * * * * awk 'BEGIN{ srand(); exit(rand() * 24 * 60.0 < 12.0 ? 0 : 1); }' && fortune
