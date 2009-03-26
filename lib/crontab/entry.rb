@@ -21,14 +21,15 @@ class Crontab
 
     attr_reader :schedule, :command, :uid
     class << self
-      def parse(line, system=false)
+      def parse(line, options={})
+        options = { :system => false }.merge(options)
         line = line.strip
         number_of_fields = 1
         number_of_fields += line.start_with?('@') ? 1 : 5
-        number_of_fields += 1 if system
+        number_of_fields += 1 if options[:system]
         words = line.split(/\s+/, number_of_fields)
         command = words.pop
-        uid = system ? words.pop : Process.uid
+        uid = options[:system] ? words.pop : Process.uid
         spec = words.join(' ')
         schedule = Crontab::Schedule.new(spec)
         new(schedule, command, uid)
