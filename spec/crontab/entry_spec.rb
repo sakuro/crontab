@@ -124,10 +124,5 @@ describe Crontab::Entry do
       lambda { @entry.uid = 0 }.should raise_error(NoMethodError)
       @entry.uid.should == Process.uid
     end
-
-    it 'should freeze uid' do
-      pending 'Fixnum instances stay unfrozen'
-      @entry.uid.should be_frozen
-    end
   end
 end
