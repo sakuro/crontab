@@ -1,6 +1,6 @@
 require 'date'
 
-module Crontab
+class Crontab
 
   class Schedule
 
@@ -11,6 +11,7 @@ module Crontab
     def initialize(spec, start=Time.now)
       raise ArgumentError, 'empty spec' if spec == '' or spec.nil?
       @start = ensure_time(start)
+      spec = spec.strip
       if spec.start_with?('@')
         parse_symbolic_spec(spec)
       else
@@ -37,6 +38,10 @@ module Crontab
 
     def start=(time_or_date)
       @start = ensure_time(time_or_date)
+    end
+
+    def from(time_or_date)
+      self.dup.tap {|new_schedule| new_schedule.start = ensure_time(time_or_date) }
     end
 
     def day_of_months_given?

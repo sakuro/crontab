@@ -126,10 +126,18 @@ describe Crontab::Schedule do
       lambda { Crontab::Schedule.new('@unknown') }.should raise_error(ArgumentError)
     end
 
+    it 'should ignore leading/trailing whitespaces' do
+      lambda {
+        Crontab::Schedule.new(' @daily')
+        Crontab::Schedule.new('@daily ')
+        Crontab::Schedule.new(' * * * * *')
+        Crontab::Schedule.new('* * * * * ')
+      }.should_not raise_error
+    end
   end
 
   describe 'when accessing' do
-    it 'should accept time as start parameter' do
+    it 'should accept Time as start parameter' do
       start = Time.local(2009, 3, 25, 10, 20, 30)
       lambda {
         schedule = Crontab::Schedule.new('* * * * *', start)
@@ -167,6 +175,48 @@ describe Crontab::Schedule do
     end
   end
 
+  describe 'when duplicating' do
+    it 'should return a new schedule starting at given Time' do
+      initial_start = Time.local(2009, 3, 25, 10, 20, 30)
+      schedule = Crontab::Schedule.new('* * * * *', initial_start)
+      new_start = Time.local(2009, 4, 25, 11, 21, 31)
+      new_schedule = schedule.from(new_start)
+
+      new_schedule.object_id.should_not == schedule.object_id
+      new_schedule.hash.should_not == schedule.hash
+      new_schedule.should_not == schedule
+
+      new_schedule.start.should == new_start
+      new_schedule.minutes.should == schedule.minutes
+      new_schedule.hours.should == schedule.hours
+      new_schedule.day_of_months.should == schedule.day_of_months
+      new_schedule.months.should == schedule.months
+      new_schedule.day_of_weeks.should == schedule.day_of_weeks
+      new_schedule.send(:day_of_months_given?).should == schedule.send(:day_of_months_given?)
+      new_schedule.send(:day_of_weeks_given?).should == schedule.send(:day_of_weeks_given?)
+    end
+
+    it 'should return a new schedule starting at given Date' do
+      initial_start = Time.local(2009, 3, 25, 10, 20, 30)
+      schedule = Crontab::Schedule.new('* * * * *', initial_start)
+      new_start = Date.new(2009, 4, 25)
+      new_start_as_time = Time.local(new_start.year, new_start.month, new_start.day)
+      new_schedule = schedule.from(new_start)
+
+      new_schedule.object_id.should_not == schedule.object_id
+      new_schedule.hash.should_not == schedule.hash
+      new_schedule.should_not == schedule
+
+      new_schedule.start.should == new_start_as_time
+      new_schedule.minutes.should == schedule.minutes
+      new_schedule.hours.should == schedule.hours
+      new_schedule.day_of_months.should == schedule.day_of_months
+      new_schedule.months.should == schedule.months
+      new_schedule.day_of_weeks.should == schedule.day_of_weeks
+      new_schedule.send(:day_of_months_given?).should == schedule.send(:day_of_months_given?)
+      new_schedule.send(:day_of_weeks_given?).should == schedule.send(:day_of_weeks_given?)
+    end
+  end
 
   describe 'when comparing' do
     it 'should equal to other if and only if both are created from equivalent spec and start time' do
