@@ -41,49 +41,49 @@ describe Crontab::Entry do
     describe 'by parsing' do
       it 'should parse crontab entry line' do
         entry = Crontab::Entry.parse('0 0 * * * echo hello')
-        entry.schedule.from(@schedule.start).should == @schedule
-        entry.command.should == @command
+        entry.schedule.from(@schedule.start).should == @schedule and
+        entry.command.should == @command and
         entry.uid.should == Process.uid
 
         entry = Crontab::Entry.parse('0 0 * * * echo hello', :system => false)
-        entry.schedule.from(@schedule.start).should == @schedule
-        entry.command.should == @command
+        entry.schedule.from(@schedule.start).should == @schedule and
+        entry.command.should == @command and
         entry.uid.should == Process.uid
       end
 
       it 'should parse crontab entry line with symbolic schedule' do
         entry = Crontab::Entry.parse('@daily echo hello')
-        entry.schedule.from(@schedule.start).should == @schedule
-        entry.command.should == @command
+        entry.schedule.from(@schedule.start).should == @schedule and
+        entry.command.should == @command and
         entry.uid.should == Process.uid
 
         entry = Crontab::Entry.parse('0 0 * * * echo hello', :system => false)
-        entry.schedule.from(@schedule.start).should == @schedule
-        entry.command.should == @command
+        entry.schedule.from(@schedule.start).should == @schedule and
+        entry.command.should == @command and
         entry.uid.should == Process.uid
       end
 
       it 'should parse system crontab entry line' do
         entry = Crontab::Entry.parse('0 0 * * * root echo hello', :system => true)
-        entry.schedule.from(@schedule.start).should == @schedule
-        entry.command.should == @command
+        entry.schedule.from(@schedule.start).should == @schedule and
+        entry.command.should == @command and
         entry.uid.should == Etc.getpwnam('root').uid
       end
 
       it 'should parse system crontab entry line with symbolic schedule' do
         entry = Crontab::Entry.parse('@daily root echo hello', :system => true)
-        entry.schedule.from(@schedule.start).should == @schedule
-        entry.command.should == @command
+        entry.schedule.from(@schedule.start).should == @schedule and
+        entry.command.should == @command and
         entry.uid.should == Etc.getpwnam('root').uid
       end
 
       it 'should ignore leading whitespaces' do
         entry = Crontab::Entry.parse('  @daily  echo hello')
-        entry.schedule.from(@schedule.start).should == @schedule
+        entry.schedule.from(@schedule.start).should == @schedule and
         entry.command.should == @command
 
         entry = Crontab::Entry.parse('  0 0 * * *  echo hello')
-        entry.schedule.from(@schedule.start).should == @schedule
+        entry.schedule.from(@schedule.start).should == @schedule and
         entry.command.should == @command
       end
     end
@@ -99,7 +99,7 @@ describe Crontab::Entry do
     end
 
     it 'should be read-accessible to schedule' do
-      @entry.schedule.should == @schedule
+      @entry.schedule.should == @schedule and
       lambda { @entry.schedule = @other_schedule }.should raise_error(NoMethodError)
       @entry.schedule.should == @schedule
     end
@@ -109,7 +109,7 @@ describe Crontab::Entry do
     end
 
     it 'should be read-accessible to command' do
-      @entry.command.should == @command
+      @entry.command.should == @command and
       lambda { @entry.command = @other_command }.should raise_error(NoMethodError)
       @entry.command.should == @command
     end
@@ -119,8 +119,8 @@ describe Crontab::Entry do
     end
 
     it 'should be read-accessible to uid' do
-      @entry.uid.should == Process.uid
-      Process.uid.should_not == 0
+      @entry.uid.should == Process.uid and
+      Process.uid.should_not == 0 and
       lambda { @entry.uid = 0 }.should raise_error(NoMethodError)
       @entry.uid.should == Process.uid
     end

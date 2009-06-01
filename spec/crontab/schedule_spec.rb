@@ -5,69 +5,69 @@ describe Crontab::Schedule do
   describe 'when parsing spec' do
     it 'should accept spec with asterisks' do
       schedule = Crontab::Schedule.new('* * * * *')
-      schedule.minutes.should == (0..59).to_a
-      schedule.hours.should == (0..23).to_a
-      schedule.day_of_months.should == (1..31).to_a
-      schedule.months.should == (1..12).to_a
+      schedule.minutes.should == (0..59).to_a and
+      schedule.hours.should == (0..23).to_a and
+      schedule.day_of_months.should == (1..31).to_a and
+      schedule.months.should == (1..12).to_a and
       schedule.day_of_weeks.should == (0..6).to_a
     end
 
     it 'should accept spec with simple numbers' do
       schedule = Crontab::Schedule.new('0 0 1 1 0')
-      schedule.minutes.should == [0]
-      schedule.hours.should == [0]
-      schedule.day_of_months.should == [1]
-      schedule.months.should == [1]
+      schedule.minutes.should == [0] and
+      schedule.hours.should == [0] and
+      schedule.day_of_months.should == [1] and
+      schedule.months.should == [1] and
       schedule.day_of_weeks.should == [0]
     end
 
     it 'should accept spec with names(Jan, Sun etc.)' do
       schedule = Crontab::Schedule.new('0 0 1 Jan sUn')
-      schedule.minutes.should == [0]
-      schedule.hours.should == [0]
-      schedule.day_of_months.should == [1]
-      schedule.months.should == [1]
+      schedule.minutes.should == [0] and
+      schedule.hours.should == [0] and
+      schedule.day_of_months.should == [1] and
+      schedule.months.should == [1] and
       schedule.day_of_weeks.should == [0]
     end
 
     it 'should accept spec with ranges(N-N)' do
       schedule = Crontab::Schedule.new('0-1 0-1 1-2 1-2 0-1')
-      schedule.minutes.should == [0, 1]
-      schedule.hours.should == [0, 1]
-      schedule.day_of_months.should == [1, 2]
-      schedule.months.should == [1, 2]
+      schedule.minutes.should == [0, 1] and
+      schedule.hours.should == [0, 1] and
+      schedule.day_of_months.should == [1, 2] and
+      schedule.months.should == [1, 2] and
       schedule.day_of_weeks.should == [0, 1]
     end
 
     it 'should accept spec with lists(comma separaged ranges/numbers)' do
       schedule = Crontab::Schedule.new('0,10,20 0,10,20 1,11,21 1,3,5 0,4,5,6')
-      schedule.minutes.should == [0, 10, 20]
-      schedule.hours.should == [0, 10, 20]
-      schedule.day_of_months.should == [1, 11, 21]
-      schedule.months.should == [1, 3, 5]
+      schedule.minutes.should == [0, 10, 20] and
+      schedule.hours.should == [0, 10, 20] and
+      schedule.day_of_months.should == [1, 11, 21] and
+      schedule.months.should == [1, 3, 5] and
       schedule.day_of_weeks.should == [0, 4, 5, 6]
 
       schedule = Crontab::Schedule.new('0,1-5,10 0,1-5,10 1,2-5,10 1,2-4,10 0,1-3,7')
-      schedule.minutes.should == [0, 1, 2, 3, 4, 5, 10]
-      schedule.hours.should == [0, 1, 2, 3, 4, 5, 10]
-      schedule.day_of_months.should == [1, 2, 3, 4, 5, 10]
-      schedule.months.should == [1, 2, 3, 4, 10]
+      schedule.minutes.should == [0, 1, 2, 3, 4, 5, 10] and
+      schedule.hours.should == [0, 1, 2, 3, 4, 5, 10] and
+      schedule.day_of_months.should == [1, 2, 3, 4, 5, 10] and
+      schedule.months.should == [1, 2, 3, 4, 10] and
       schedule.day_of_weeks.should == [0, 1, 2, 3]
     end
 
     it 'should accept spec with steps(range/STEP or */STEP)' do
       schedule = Crontab::Schedule.new('0-30/10 1-20/5 5-30/7 4-10/2 1-5/2')
-      schedule.minutes.should == [0, 10, 20, 30]
-      schedule.hours.should == [1, 6, 11, 16 ]
-      schedule.day_of_months.should == [5, 12, 19, 26 ]
-      schedule.months.should == [4, 6, 8, 10]
+      schedule.minutes.should == [0, 10, 20, 30] and
+      schedule.hours.should == [1, 6, 11, 16 ] and
+      schedule.day_of_months.should == [5, 12, 19, 26 ] and
+      schedule.months.should == [4, 6, 8, 10] and
       schedule.day_of_weeks.should == [1, 3, 5]
 
       schedule = Crontab::Schedule.new('*/25 */5 */10 */4 */2')
-      schedule.minutes.should == [0, 25, 50]
-      schedule.hours.should == [0, 5, 10, 15, 20]
-      schedule.day_of_months.should == [1, 11, 21, 31]
-      schedule.months.should == [1, 5, 9]
+      schedule.minutes.should == [0, 25, 50] and
+      schedule.hours.should == [0, 5, 10, 15, 20] and
+      schedule.day_of_months.should == [1, 11, 21, 31] and
+      schedule.months.should == [1, 5, 9] and
       schedule.day_of_weeks.should == [0, 2, 4, 6]
     end
 
@@ -109,12 +109,12 @@ describe Crontab::Schedule do
 
     it 'should accept symblic specs' do
       start = Time.now
-      Crontab::Schedule.new('@yearly', start).should == Crontab::Schedule.new('0 0 1 1 *', start)
-      Crontab::Schedule.new('@annually', start).should == Crontab::Schedule.new('0 0 1 1 *', start)
-      Crontab::Schedule.new('@monthly', start).should == Crontab::Schedule.new('0 0 1 * *', start)
-      Crontab::Schedule.new('@weekly', start).should == Crontab::Schedule.new('0 0 * * 0', start)
-      Crontab::Schedule.new('@daily', start).should == Crontab::Schedule.new('0 0 * * *', start)
-      Crontab::Schedule.new('@midnight', start).should == Crontab::Schedule.new('0 0 * * *', start)
+      Crontab::Schedule.new('@yearly', start).should == Crontab::Schedule.new('0 0 1 1 *', start) and
+      Crontab::Schedule.new('@annually', start).should == Crontab::Schedule.new('0 0 1 1 *', start) and
+      Crontab::Schedule.new('@monthly', start).should == Crontab::Schedule.new('0 0 1 * *', start) and
+      Crontab::Schedule.new('@weekly', start).should == Crontab::Schedule.new('0 0 * * 0', start) and
+      Crontab::Schedule.new('@daily', start).should == Crontab::Schedule.new('0 0 * * *', start) and
+      Crontab::Schedule.new('@midnight', start).should == Crontab::Schedule.new('0 0 * * *', start) and
       Crontab::Schedule.new('@hourly', start).should == Crontab::Schedule.new('0 * * * *', start)
     end
 
@@ -156,7 +156,7 @@ describe Crontab::Schedule do
     it 'should set start to given Time' do
       initial_start = Time.local(2009, 3, 25, 10, 20, 30)
       schedule = Crontab::Schedule.new('* * * * *', initial_start)
-      schedule.start.should == initial_start
+      schedule.start.should == initial_start and
 
       new_start = Time.local(2009, 4, 25, 11, 21, 31)
       schedule.start = new_start
@@ -166,7 +166,7 @@ describe Crontab::Schedule do
     it 'should set start to given Date' do
       initial_start = Time.local(2009, 3, 25, 10, 20, 30)
       schedule = Crontab::Schedule.new('* * * * *', initial_start)
-      schedule.start.should == initial_start
+      schedule.start.should == initial_start and
 
       new_start = Date.new(2009, 4, 25)
       new_start_as_time = Time.local(new_start.year, new_start.month, new_start.day)
@@ -182,17 +182,17 @@ describe Crontab::Schedule do
       new_start = Time.local(2009, 4, 25, 11, 21, 31)
       new_schedule = schedule.from(new_start)
 
-      new_schedule.object_id.should_not == schedule.object_id
-      new_schedule.hash.should_not == schedule.hash
-      new_schedule.should_not == schedule
+      new_schedule.object_id.should_not == schedule.object_id and
+      new_schedule.hash.should_not == schedule.hash and
+      new_schedule.should_not == schedule and
 
-      new_schedule.start.should == new_start
-      new_schedule.minutes.should == schedule.minutes
-      new_schedule.hours.should == schedule.hours
-      new_schedule.day_of_months.should == schedule.day_of_months
-      new_schedule.months.should == schedule.months
-      new_schedule.day_of_weeks.should == schedule.day_of_weeks
-      new_schedule.send(:day_of_months_given?).should == schedule.send(:day_of_months_given?)
+      new_schedule.start.should == new_start and
+      new_schedule.minutes.should == schedule.minutes and
+      new_schedule.hours.should == schedule.hours and
+      new_schedule.day_of_months.should == schedule.day_of_months and
+      new_schedule.months.should == schedule.months and
+      new_schedule.day_of_weeks.should == schedule.day_of_weeks and
+      new_schedule.send(:day_of_months_given?).should == schedule.send(:day_of_months_given?) and
       new_schedule.send(:day_of_weeks_given?).should == schedule.send(:day_of_weeks_given?)
     end
 
@@ -203,17 +203,17 @@ describe Crontab::Schedule do
       new_start_as_time = Time.local(new_start.year, new_start.month, new_start.day)
       new_schedule = schedule.from(new_start)
 
-      new_schedule.object_id.should_not == schedule.object_id
-      new_schedule.hash.should_not == schedule.hash
-      new_schedule.should_not == schedule
+      new_schedule.object_id.should_not == schedule.object_id and
+      new_schedule.hash.should_not == schedule.hash and
+      new_schedule.should_not == schedule and
 
-      new_schedule.start.should == new_start_as_time
-      new_schedule.minutes.should == schedule.minutes
-      new_schedule.hours.should == schedule.hours
-      new_schedule.day_of_months.should == schedule.day_of_months
-      new_schedule.months.should == schedule.months
-      new_schedule.day_of_weeks.should == schedule.day_of_weeks
-      new_schedule.send(:day_of_months_given?).should == schedule.send(:day_of_months_given?)
+      new_schedule.start.should == new_start_as_time and
+      new_schedule.minutes.should == schedule.minutes and
+      new_schedule.hours.should == schedule.hours and
+      new_schedule.day_of_months.should == schedule.day_of_months and
+      new_schedule.months.should == schedule.months and
+      new_schedule.day_of_weeks.should == schedule.day_of_weeks and
+      new_schedule.send(:day_of_months_given?).should == schedule.send(:day_of_months_given?) and
       new_schedule.send(:day_of_weeks_given?).should == schedule.send(:day_of_weeks_given?)
     end
   end
@@ -221,17 +221,17 @@ describe Crontab::Schedule do
   describe 'when comparing' do
     it 'should equal to other if and only if both are created from equivalent spec and start time' do
       start = Time.now
-      Crontab::Schedule.new('0 0 1 1 0', start).should == Crontab::Schedule.new('0 0 1 1 0', start)
-      Crontab::Schedule.new('0 0 1 1 0', start).should == Crontab::Schedule.new('0 0 1 Jan 0', start)
-      Crontab::Schedule.new('0 0 1 1 0', start).should == Crontab::Schedule.new('0 0 1 1 Sun', start)
+      Crontab::Schedule.new('0 0 1 1 0', start).should == Crontab::Schedule.new('0 0 1 1 0', start) and
+      Crontab::Schedule.new('0 0 1 1 0', start).should == Crontab::Schedule.new('0 0 1 Jan 0', start) and
+      Crontab::Schedule.new('0 0 1 1 0', start).should == Crontab::Schedule.new('0 0 1 1 Sun', start) and
 
-      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('1 0 1 1 0', start)
-      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 1 1 1 0', start)
-      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 0 2 1 0', start)
-      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 0 1 2 0', start)
-      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 0 1 1 1', start)
+      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('1 0 1 1 0', start) and
+      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 1 1 1 0', start) and
+      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 0 2 1 0', start) and
+      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 0 1 2 0', start) and
+      Crontab::Schedule.new('0 0 1 1 0', start).should_not == Crontab::Schedule.new('0 0 1 1 1', start) and
 
-      Crontab::Schedule.new('0 0 1-5 1 0', start).should == Crontab::Schedule.new('0 0 1,2,3,4,5 1 0', start)
+      Crontab::Schedule.new('0 0 1-5 1 0', start).should == Crontab::Schedule.new('0 0 1,2,3,4,5 1 0', start) and
       Crontab::Schedule.new('0 0 1 1 0-4', start).should == Crontab::Schedule.new('0 0 1 1 0,1,2,3,4', start)
     end
   end
@@ -246,7 +246,7 @@ describe Crontab::Schedule do
         Time.local(2009, 3, 8, 4, 34),
         Time.local(2009, 3, 8, 4, 35),
       ]
-      schedule.first(expected.size).should == expected
+      schedule.first(expected.size).should == expected and
 
       schedule = Crontab::Schedule.new('5 10 3-5,10 * *', Time.local(2009, 3, 8, 10, 30, 15))
       expected = [
@@ -277,14 +277,14 @@ describe Crontab::Schedule do
         Time.local(2009, 3, 29, 0, 0),
         Time.local(2009, 3, 30, 0, 0),
       ]
-      schedule.first(expected.size).should == expected
+      schedule.first(expected.size).should == expected and
 
       schedule = Crontab::Schedule.new('0 0 1,10,11 3 *', Time.local(2009, 3, 8, 10, 30, 15))
       expected = [
         Time.local(2009, 3, 10, 0, 0),
         Time.local(2009, 3, 11, 0, 0),
       ]
-      schedule.first(expected.size).should == expected
+      schedule.first(expected.size).should == expected and
 
       schedule = Crontab::Schedule.new('0 0 * 3 0,1', Time.local(2009, 3, 8, 10, 30, 15))
       expected = [
@@ -313,13 +313,13 @@ describe Crontab::Schedule do
         Time.local(2009, 3, 8, 4, 39),
         Time.local(2009, 3, 8, 4, 40),
       ]
-      schedule.until(Time.local(2009, 3, 8, 4, 40, 10)).should == expected
+      schedule.until(Time.local(2009, 3, 8, 4, 40, 10)).should == expected and
 
       result = []
       schedule.until(Time.local(2009, 3, 8, 4, 40, 10)) do |t|
         result << t
       end
-      result.should == expected
+      result.should == expected and
 
       schedule = Crontab::Schedule.new('*/20 0 21 * *', Time.local(2009, 3, 8, 4, 30, 15))
       expected = [

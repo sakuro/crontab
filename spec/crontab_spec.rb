@@ -5,13 +5,13 @@ describe Crontab do
   describe 'parsing' do
     it 'should recognize entries' do
       crontab = Crontab.parse(File.read('spec/data/crontab.txt'))
-      crontab.entries.size.should == 5
+      crontab.entries.size.should == 5 and
       crontab.entries.should be_frozen
       crontab.entries[0].tap do |e|
-        e.schedule.minutes.should == [8]
-        e.schedule.hours.should == [3]
-        e.schedule.day_of_months.should == (1..31).to_a
-        e.schedule.months.should == (1..12).to_a
+        e.schedule.minutes.should == [8] and
+        e.schedule.hours.should == [3] and
+        e.schedule.day_of_months.should == (1..31).to_a and
+        e.schedule.months.should == (1..12).to_a and
         e.schedule.day_of_weeks.should == [6]
       end
     end
