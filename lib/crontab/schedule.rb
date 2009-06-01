@@ -2,12 +2,25 @@ require 'date'
 
 class Crontab
 
+  # A class which represents schedules in crontab(5).
   class Schedule
 
     MONTH_NAMES = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
     DAY_OF_WEEK_NAMES = %w(Sun Mon Tue Wed Thu Fri Sat)
     DAYS_IN_MONTH = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+    # Creates a cron job schedule.
+    #
+    # * <tt>spec</tt> schedule specifier defined in crontab(5).
+    #   Both numeric and named spec are supported.
+    # * <tt>start</tt> the time *or* date this schedule begins.
+    #
+    # Supported named specs are:
+    # * <tt>@yearly</tt>, <tt>@annually</tt>
+    # * <tt>@monthly</tt>
+    # * <tt>@weekly</tt>
+    # * <tt>@daily</tt>, <tt>@midnight</tt>
+    # * <tt>@hourly</tt>
     def initialize(spec, start=Time.now)
       raise ArgumentError, 'empty spec' if spec == '' or spec.nil?
       @start = ensure_time(start)
@@ -36,10 +49,12 @@ class Crontab
 
     attr_reader :minutes, :hours, :day_of_months, :months, :day_of_weeks, :start
 
+    # Changes the start timing of this schedule to <i>time_or_date</i>.
     def start=(time_or_date)
       @start = ensure_time(time_or_date)
     end
 
+    # Creates new schedule which starts at the given <i>time_or_date</i>.
     def from(time_or_date)
       self.dup.tap {|new_schedule| new_schedule.start = ensure_time(time_or_date) }
     end
@@ -54,6 +69,7 @@ class Crontab
     end
     protected :day_of_weeks_given?
 
+    # Iterates over timings specified in this schedule, starting at <tt>@start</tt>.
     def each
       return to_enum unless block_given?
       year = @start.year
@@ -86,6 +102,7 @@ class Crontab
 
     include Enumerable
 
+    # Iterates over timings from <tt>@start</tt> until given <i>time_or_date</i>.
     def until(time_or_date)
       time = ensure_time(time_or_date)
       if block_given?

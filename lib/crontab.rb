@@ -1,8 +1,12 @@
 require 'crontab/schedule'
 require 'crontab/entry'
 
+# A class which represents crontab(5) content.
 class Crontab
   class << self
+    # Parses a crontab(5) text.
+    #
+    # * <tt>src</tt> string in crontab(5) format
     def parse(src)
       entries = []
       env = {}

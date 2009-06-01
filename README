@@ -1,0 +1,17 @@
+= What is this?
+
+A crontab(5) parser.
+
+== Usage
+
+ crontab = Crontab.parse(src)
+ 
+ from_date = Date.parse('2009-10-10')
+ to_date = Date.parse('2009-10-20')
+ 
+ crontab.entries.each do |e|
+   puts e.command
+   e.schedule.from(from_date).until(to_date) do |timing|
+     puts timing
+   end
+ end
