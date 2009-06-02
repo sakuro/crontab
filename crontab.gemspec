@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'crontab'
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.author = 'OZAWA Sakuro'
   s.email = 'github@2238club.org'
   s.homepage = 'http://github.com/sakuro/crontab'
