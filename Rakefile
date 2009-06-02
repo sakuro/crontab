@@ -12,9 +12,9 @@ Rake::GemPackageTask.new(spec) do |pkg|
 end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.main = "README"
-  rdoc.rdoc_files.include("README", "lib/**/*.rb")
-  rdoc.options << "--all"
+  rdoc.main = 'README.rdoc'
+  rdoc.rdoc_files.include('README.rdoc', 'lib/**/*.rb')
+  rdoc.options << '--all'
 end
 
 Spec::Rake::SpecTask.new do |t|

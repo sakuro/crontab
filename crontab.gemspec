@@ -14,7 +14,9 @@ Gem::Specification.new do |s|
     'spec/crontab/entry_spec.rb',
     'spec/crontab/schedule_spec.rb',
     'crontab.gemspec',
-    'Rakefile'
+    'Rakefile',
+    'README.rdoc'
   ]
   s.has_rdoc = true
+  s.rubyforge_project = 'n/a'
 end
