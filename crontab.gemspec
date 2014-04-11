@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     'Rakefile',
     'README.rdoc'
   ]
-  s.add_development_dependency 'cron2english', '~> 0.1', '~> 0.1.3'
+  s.add_runtime_dependency('cron2english', ['~> 0.1.3'])
   s.has_rdoc = true
   s.rubyforge_project = 'n/a'
 end
