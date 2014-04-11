@@ -1,3 +1,5 @@
+require 'cron2english'
+
 class Crontab
   # A class which represents a job line in crontab(5).
   class Entry
@@ -13,6 +15,7 @@ class Crontab
       @schedule = schedule.freeze
       @command = command.freeze
       @cron_definition = cron_definition.freeze
+      @translation = Cron2English.parse(@cron_definition).freeze
       @uid =
         case uid
         when String
@@ -26,7 +29,7 @@ class Crontab
         end
     end
 
-    attr_reader :schedule, :command, :cron_definition, :uid
+    attr_reader :schedule, :command, :cron_definition, :translation, :uid
     class << self
       # Parses a string line in crontab(5) job format.
       #

@@ -98,6 +98,8 @@ describe Crontab::Entry do
       @other_command = 'echo bonjour'
       @cron_definition = '0 0 * * *'
       @other_cron_definition = '0,30 0 * * *'
+      @translation = ['midnight', 'every day']
+      @other_translation = ['0 and 30 minutes past', 'midnight of', 'every day']
       @entry = Crontab::Entry.new(@schedule, @command, @cron_definition)
     end
 
@@ -136,6 +138,16 @@ describe Crontab::Entry do
       @entry.cron_definition == @cron_definition and
       lambda { @entry.cron_definition = @other_cron_definition }.should raise_error(NoMethodError)
       @entry.cron_definition == @cron_definition
+    end
+
+    it 'should be freeze translation' do
+      @entry.translation.should be_frozen
+    end
+
+    it 'should be read-accessible to translation' do
+      @entry.translation == @translation and
+      lambda { @entry.translation = @other_translation }.should raise_error(NoMethodError)
+      @entry.translation == @translation
     end
   end
 end
