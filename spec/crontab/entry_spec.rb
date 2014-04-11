@@ -5,25 +5,26 @@ require 'crontab/schedule'
 describe Crontab::Entry do
   describe 'when instantiating' do
     before :each do
-      @schedule = Crontab::Schedule.new('0 0 * * *') # @daily
+      @cron_definition = '0 0 * * *'
+      @schedule = Crontab::Schedule.new(@cron_definition) # @daily
       @command = 'echo hello'
     end
 
     it 'should accpet Crontab::Schedule and command String' do
-      entry = Crontab::Entry.new(@schedule, @command)
+      entry = Crontab::Entry.new(@schedule, @command, @cron_definition)
       entry.uid.should == Process.uid
     end
 
     it 'should accpet Crontab::Schedule, command String and user String' do
       uid = Process.uid
       user = Etc.getpwuid(uid)
-      entry = Crontab::Entry.new(@schedule, @command, user.name)
+      entry = Crontab::Entry.new(@schedule, @command, @cron_definition, user.name)
       entry.uid.should == uid
     end
 
     it 'should accpet Crontab::Schedule, command String and user ID' do
       uid = Process.uid
-      entry = Crontab::Entry.new(@schedule, @command, uid)
+      entry = Crontab::Entry.new(@schedule, @command, @cron_definition, uid)
       entry.uid.should == uid
     end
 
@@ -95,7 +96,9 @@ describe Crontab::Entry do
       @other_schedule = Crontab::Schedule.new('@monthly')
       @command = 'ehco hello'
       @other_command = 'echo bonjour'
-      @entry = Crontab::Entry.new(@schedule, @command)
+      @cron_definition = '0 0 * * *'
+      @other_cron_definition = '0,30 0 * * *'
+      @entry = Crontab::Entry.new(@schedule, @command, @cron_definition)
     end
 
     it 'should be read-accessible to schedule' do
@@ -123,6 +126,16 @@ describe Crontab::Entry do
       Process.uid.should_not == 0 and
       lambda { @entry.uid = 0 }.should raise_error(NoMethodError)
       @entry.uid.should == Process.uid
+    end
+
+    it 'should be freeze cron_definition' do
+      @entry.cron_definition.should be_frozen
+    end
+
+    it 'should be read-accessible to cron_definition' do
+      @entry.cron_definition == @cron_definition and
+      lambda { @entry.cron_definition = @other_cron_definition }.should raise_error(NoMethodError)
+      @entry.cron_definition == @cron_definition
     end
   end
 end
