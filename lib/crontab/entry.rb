@@ -1,3 +1,5 @@
+require 'cron2english'
+
 class Crontab
   # A class which represents a job line in crontab(5).
   class Entry
@@ -6,12 +8,14 @@ class Crontab
     # * <tt>schedule</tt> A Crontab::Schedule instance.
     # * <tt>command</tt>
     # * <tt>uid</tt>
-    def initialize(schedule, command, uid=nil)
+    def initialize(schedule, command, cron_definition, uid=nil)
       raise ArgumentError, 'invalid schedule' unless schedule.is_a? Schedule
       raise ArgumentError, 'invalid command' unless command.is_a? String
 
       @schedule = schedule.freeze
       @command = command.freeze
+      @cron_definition = cron_definition.freeze
+      @translation = Cron2English.parse(@cron_definition).freeze
       @uid =
         case uid
         when String
@@ -25,7 +29,7 @@ class Crontab
         end
     end
 
-    attr_reader :schedule, :command, :uid
+    attr_reader :schedule, :command, :cron_definition, :translation, :uid
     class << self
       # Parses a string line in crontab(5) job format.
       #
@@ -40,9 +44,10 @@ class Crontab
         words = line.split(/\s+/, number_of_fields)
         command = words.pop
         uid = options[:system] ? words.pop : Process.uid
+        cron_definition = words.first(5).join(' ')
         spec = words.join(' ')
         schedule = Crontab::Schedule.new(spec)
-        new(schedule, command, uid)
+        new(schedule, command, cron_definition, uid)
       end
     end
   end
